@@ -1,0 +1,18 @@
+{% extends "base.twig" %}
+
+{% block title %}Forgot password{% endblock %}
+
+{% block body %}
+
+    <h1>Request password reset</h1>
+
+    <form action="/password/request-reset" method="post">
+        <div class="form-group">
+            <label for="email">Email address</label>
+            <input type="email" class="form-control" name="email" id="email" placeholder="Email" required autofocus>
+        </div>
+
+        <button class="btn btn-default" type="submit">Send password reset email</button>
+    </form>
+
+{% endblock %}

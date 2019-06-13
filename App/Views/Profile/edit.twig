@@ -1,0 +1,102 @@
+{% extends 'base.twig' %}
+
+{%  block title %}Edit profile{% endblock %}
+
+{% block footer %}
+    <script>
+        $.validator.addMethod('validPassword',
+            function (value, element, param) {
+                if(value !== '') {
+                    if(value.match(/.*[a-z]+.*/i) == null) {
+                        return false; // At least one letter
+                    }
+                    if(value.match(/.*\d+.*/) == null) {
+                        return false; // At least one number
+                    }
+                }
+
+                return true;
+            },
+            'Must contain at least one letter and one number'
+        );
+
+        $(document).ready(function () {
+
+            let userId = {{ user.id }};
+
+            $('#form').validate({
+                rules: {
+                    // name: 'required',
+                    email: {
+                        required: true,
+                        email: true,
+                        remote: {
+                            url: '/validate-email',
+                            data: {
+                                ignore_id: function () {
+                                    return userId;
+                                }
+                            }
+
+                        }
+                    },
+                    password: {
+                        // required: true,
+                        minlength: 6,
+                        validPassword: true
+                    },
+                    passwordConfirmation: {
+                        equalTo: '#password'
+                    }
+                },
+                messages: {
+                    email: {
+                        remote: 'Email already taken'
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    <h1>Profile</h1>
+
+    {% if user.errors is not empty %}
+        <p>Errors:</p>
+        <ul>
+            {% for error in user.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form id="form" action="/profile/update" method="post">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" name="name" id="name" placeholder="Name" value="{{ user.name }}">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" name="email" id="email" placeholder="Email" value="{{ user.email }}">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input id="password" class="form-control" name="password" placeholder="Password" type="password"
+            />
+        </div>
+
+        <div class="form-group">
+            <label for="passwordConfirmation">Password Confirm</label>
+            <input type="password" class="form-control" aria-describedby="helpBlock"  name="passwordConfirmation" id="passwordConfirmation" placeholder="Password Confirm">
+            <span id="helpBlock" class="help-block">Leave passwords blank if you don't want to change it</span>
+        </div>
+
+        <input class="btn btn-default" type="submit" name="" id="" value="Update">
+        <a href="/profile/show">Cancel</a>
+    </form>
+
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.twig" %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+
+    <h1>Welcome</h1>
+
+    {#<?php if(isset($_SESSION['user_id']): ?>#}
+        {#User with id <?php echo $_SESSION['user_id']; ?> is logged in#}
+    {#<?php else: ?>#}
+        {#<a href="login">Sign in</a> or <a href="/register/create">Sign up</a>#}
+    {#<?php endif; ?>#}
+
+{% if session.user_id %}
+    User with id <?php echo $_SESSION['user_id']; ?> is logged in
+    <a href="logout">Sign out</a>
+{% else %}
+    <a href="login">Sign in</a> or <a href="/register/create">Sign up</a>
+{% endif %}
+
+{% endblock %}

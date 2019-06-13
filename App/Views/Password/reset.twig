@@ -1,0 +1,71 @@
+{% extends 'base.twig' %}
+
+{%  block title %}Sign Up{% endblock %}
+
+{% block footer %}
+    <script src="/js/passwordValidation.js"></script>
+    <script>
+        // $.validator.addMethod('validPassword',
+        //     function (value, element, param) {
+        //         if(value !== '') {
+        //             if(value.match(/.*[a-z]+.*/i) == null) {
+        //                 return false; // At least one letter
+        //             }
+        //             if(value.match(/.*\d+.*/) == null) {
+        //                 return false; // At least one number
+        //             }
+        //         }
+        //
+        //         return true;
+        //     },
+        //     'Must contain at least one letter and one number'
+        // );
+
+        $(document).ready(function () {
+            $('#form').validate({
+                rules: {
+                    password: {
+                        required: true,
+                        minlength: 6,
+                        validPassword: true
+                    },
+                    passwordConfirmation: {
+                        equalTo: '#password'
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+
+    <h1>Reset password</h1>
+
+    {% if user.errors is not empty %}
+        <p>Errors:</p>
+        <ul>
+            {% for error in user.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form id="form" method="post" action="/password/reset-password">
+        <input type="hidden" name="token" id="" value="{{ token }}">
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input id="password" class="form-control" name="password" placeholder="Password" type="password"
+            />
+        </div>
+
+        <div class="form-group">
+            <label for="passwordConfirmation">Password</label>
+            <input type="password" class="form-control" name="passwordConfirmation" id="passwordConfirmation" placeholder="Password">
+        </div>
+
+        <input class="btn btn-default" type="submit" name="" id="" value="Reset Password">
+    </form>
+
+{% endblock %}
